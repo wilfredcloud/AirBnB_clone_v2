@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 
-class State(BaseModel, Base):
+class City(BaseModel, Base):
     """
     Represents the City Class
 
