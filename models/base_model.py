@@ -1,41 +1,43 @@
 #!/usr/bin/python3
 """Defines the BaseModel class."""
 import models
-from uuid import uuid
+from uuid import uuid4
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, DATETIME
-
+from sqlalchemy import Column, DateTime, String
 
 Base = declarative_base()
 
 
 class BaseModel:
-    """A base class for all hbnb models"""
-    id = Column(String(60), nullable=False, unique=True, primary_key=True)
-    created_at = Column(DATETIME, nullable=False, default=datetime.utcnow())
-    updated_at = Column(DATETIME, nullable=False, default=datetime.utcnow())
+    """Defines the BaseModel class.
+    Attributes:
+        id (sqlalchemy String):  BaseModel id.
+        created_at (sqlalchemy DateTime): datetime at creation.
+        updated_at (sqlalchemy DateTime): datetime of last update.
+    """
+
+    id = Column(String(60), primary_key=True, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
-        """Instatntiates a new model"""
-        if not kwargs:
-            from models import storage
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-            storage.new(self)
-        else:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            del kwargs['__class__']
-            self.__dict__.update(kwargs)
+        """Initialize a new BaseModel.
+        Args:
+            *args (any): Unused.
+            **kwargs (dict): Key/value pairs.
+        """
+        self.id = str(uuid4())
+        self.created_at = self.updated_at = datetime.utcnow()
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if key != "__class__":
+                    setattr(self, key, value)
 
     def save(self):
-        """
-        Update updated_at with the current datetime.
-        """
+        """Update updated_at with the current datetime."""
         self.updated_at = datetime.utcnow()
         models.storage.new(self)
         models.storage.save()
