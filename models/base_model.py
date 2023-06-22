@@ -14,9 +14,9 @@ Base = declarative_base()
 class BaseModel:
     """Defines the BaseModel class.
     Attributes:
-        id (sqlalchemy String): The BaseModel id.
-        created_at (sqlalchemy DateTime): The datetime at creation.
-        updated_at (sqlalchemy DateTime): The datetime of last update.
+        id (sqlalchemy String): BaseModel id.
+        created_at (sqlalchemy DateTime): datetime at creation.
+        updated_at (sqlalchemy DateTime): datetime of last update.
     """
 
     id = Column(String(60), primary_key=True, nullable=False)
@@ -24,7 +24,8 @@ class BaseModel:
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
-        """Initialize a new BaseModel.
+        """
+        Initialize a new BaseModel.
         Args:
             *args (any): Unused.
             **kwargs (dict): Key/value pairs of attributes.
@@ -39,15 +40,16 @@ class BaseModel:
                     setattr(self, key, value)
 
     def save(self):
-        """Update updated_at with the current datetime."""
+        """
+        Update updated_at with the current datetime.
+        """
         self.updated_at = datetime.utcnow()
         models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
-        """Return a dictionary representation of the BaseModel instance.
-        Includes the key/value pair __class__ representing
-        the class name of the object.
+        """
+        Return a dictionary representation of the BaseModel instance.
         """
         my_dict = self.__dict__.copy()
         my_dict["__class__"] = str(type(self).__name__)

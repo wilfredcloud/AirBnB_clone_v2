@@ -8,11 +8,11 @@ from sqlalchemy.orm import relationship
 
 
 class Amenity(BaseModel, Base):
-    """Represents an Amenity for a MySQL database.
-    Inherits from SQLAlchemy Base and links to the MySQL table amenities.
+    """Represents an Amenity table object.
+
     Attributes:
-        __tablename__ (str): The name of the MySQL table to store Amenities.
-        name (sqlalchemy String): The amenity name.
+        __tablename__ (str): MySQL table to store Amenities.
+        name (sqlalchemy String): amenity name.
         place_amenities (sqlalchemy relationship): Place-Amenity relationship.
     """
     __tablename__ = "amenities"
