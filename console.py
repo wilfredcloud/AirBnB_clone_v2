@@ -10,7 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-
+import shlex
 
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
@@ -118,35 +118,32 @@ class HBNBCommand(cmd.Cmd):
         Create a object of any class
         Usage: create <Class name> <param 1> <param 2> <param 3>...
         """
-        try:
-            if not args:
-                raise SyntaxError()
-            args_list = args.split(" ")
-            kwargs = {}
-            for i in range(1, len(args_list)):
-                key, value = tuple(args_list[i].split("="))
-                if value[0] == '"':
-                    value = value.strip('"').replace("_", " ")
-                else:
-                    try:
-                        value = eval(value)
-                    except (SyntaxError, NameError):
-                        continue
-                kwargs[key] = value
-
-            if kwargs == {}:
-                obj = eval(args_list[0])()
-            else:
-                obj = eval(args_list[0])(**kwargs)
-                storage.new(obj)
-            print(obj.id)
-            obj.save()
-
-        except SyntaxError:
+        if len(args) == 0:
             print("** class name missing **")
-        except NameError:
+            return
+        try:
+            args = shlex.split(args)
+            new_instance = eval(args[0])()
+            for i in args[1:]:
+                try:
+                    key = i.split("=")[0]
+                    value = i.split("=")[1]
+                    if hasattr(new_instance, key) is True:
+                        value = value.replace("_", " ")
+                        try:
+                            value = eval(value)
+                        except:
+                            pass
+                        setattr(new_instance, key, value)
+                except (ValueError, IndexError):
+                    pass
+            new_instance.save()
+            print(new_instance.id)
+        except:
             print("** class doesn't exist **")
+            return
 
+    
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
