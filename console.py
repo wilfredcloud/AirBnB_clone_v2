@@ -14,7 +14,7 @@ import shlex
 
 
 class HBNBCommand(cmd.Cmd):
-    """ Contains the functionality for the HBNB console"""
+    """Contains the functionality for the HBNB console"""
 
     # determines prompt for interactive/non-interactive modes
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
@@ -119,9 +119,9 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         try:
-            args = shlex.split(args)
-            new_instance = eval(args[0])()
-            for i in args[1:]:
+            args_list = shlex.split(args)
+            new_instance = eval(args_list[0])()
+            for i in args_list[1:]:
                 try:
                     key = i.split("=")[0]
                     value = i.split("=")[1]

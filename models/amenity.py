@@ -11,7 +11,7 @@ class Amenity(BaseModel, Base):
     """Represents an Amenity table object.
 
     Attributes:
-        __tablename__ (str): MySQL table to store Amenities.
+        __tablename__ (str): MySQL table Amenities.
         name (sqlalchemy String): amenity name.
         place_amenities (sqlalchemy relationship): Place-Amenity relationship.
     """
